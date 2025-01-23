@@ -6,7 +6,7 @@
 
 int main()
 {
-    InitWindow(800, 450, "raylib [core] example - basic window");
+    InitWindow(800, 450, "Classy Clash");
 
     SetTargetFPS(60);
 
@@ -16,7 +16,7 @@ int main()
 
         ClearBackground(RAYWHITE);
 
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        DrawText("Classy Clash", 190, 200, 20, LIGHTGRAY);
 
         EndDrawing();
     }
