@@ -1,0 +1,39 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "game-map.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "RPG Nature Tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "game-map.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 441,
+                "y": 398.6666666666667
+            }
+        }
+    },
+    "last.imagePath": "C:/Users/raghu/Projects/Personal Learning/raylib-cpp/classy-clash-repo/classy-clash/classy-clash/nature_tileset",
+    "map.height": 24,
+    "map.lastUsedFormat": "tmx",
+    "map.width": 24,
+    "openFiles": [
+        "RPG Nature Tileset.tsx",
+        "game-map.tmx"
+    ],
+    "project": "map.tiled-project",
+    "recentFiles": [
+        "RPG Nature Tileset.tsx",
+        "game-map.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}

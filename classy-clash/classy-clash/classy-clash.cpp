@@ -12,12 +12,11 @@ int main()
 
     while (!WindowShouldClose())
     {
+        //Perform Business Logic
         BeginDrawing();
-
         ClearBackground(RAYWHITE);
-
+        //Render Here
         DrawText("Classy Clash", 190, 200, 20, LIGHTGRAY);
-
         EndDrawing();
     }
 
