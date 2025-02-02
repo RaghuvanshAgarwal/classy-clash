@@ -4,22 +4,27 @@
 #include <iostream>
 #include "raylib.h"
 
+constexpr int screen_width{384};
+constexpr int screen_height{384};
+
 int main()
 {
-    InitWindow(800, 450, "Classy Clash");
-
+    InitWindow(screen_width, screen_height, "Classy Clash");
     SetTargetFPS(60);
+
+
+#pragma region Texture Loading
+    const Texture2D t_game_map = LoadTexture("nature_tileset/game-map_v2.png");
+#pragma endregion
+
 
     while (!WindowShouldClose())
     {
-        //Perform Business Logic
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        //Render Here
-        DrawText("Classy Clash", 190, 200, 20, LIGHTGRAY);
+        DrawTextureEx(t_game_map, {0, 0}, 0, 4, WHITE);
         EndDrawing();
     }
 
     CloseWindow();
-
 }
