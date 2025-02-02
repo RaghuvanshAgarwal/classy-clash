@@ -10,8 +10,6 @@
     <list default="true" id="f053898f-28b9-4e4b-b311-56dec893b12b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.classy-clash/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.classy-clash/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classy-clash/classy-clash.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/classy-clash/classy-clash.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classy-clash/nature_tileset/game-map_v2.png" beforeDir="false" afterPath="$PROJECT_DIR$/classy-clash/nature_tileset/game-map_v2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classy-clash/nature_tileset/game-map_v2.tmx" beforeDir="false" afterPath="$PROJECT_DIR$/classy-clash/nature_tileset/game-map_v2.tmx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +125,7 @@
       <workItem from="1737640106494" duration="37000" />
       <workItem from="1737640889229" duration="77000" />
       <workItem from="1738390616952" duration="838000" />
-      <workItem from="1738514441426" duration="2860000" />
+      <workItem from="1738514441426" duration="3905000" />
     </task>
     <servers />
   </component>
