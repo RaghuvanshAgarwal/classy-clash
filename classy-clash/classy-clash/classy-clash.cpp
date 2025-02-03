@@ -9,6 +9,12 @@ constexpr int screen_width{384};
 constexpr int screen_height{384};
 constexpr int map_scale{4};
 
+class character
+{
+    public:
+    private:
+};
+
 int main()
 {
     InitWindow(screen_width, screen_height, "Classy Clash");
@@ -70,14 +76,14 @@ int main()
             running_time = 0.0f;
         }
 
-        Rectangle knight_source_rect{
+        const Rectangle knight_source_rect{
             static_cast<float>(frame) * static_cast<float>(t_knight.width) / 6.0f,
             0,
             right_left * static_cast<float>(t_knight.width) / 6.0f,
             static_cast<float>(t_knight.height)
         };
 
-        Rectangle knight_dest_rect{
+        const Rectangle knight_dest_rect{
             knight_pos.x,
             knight_pos.y,
             map_scale * static_cast<float>(t_knight.width) / 6.0f,
@@ -86,12 +92,14 @@ int main()
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawTextureEx(t_game_map, map_pos, 0, map_scale, WHITE);
-        DrawTexturePro(t_knight, knight_source_rect, knight_dest_rect, Vector2Zero(), 0,WHITE);
+        DrawTextureEx(t_game_map, map_pos, 0, map_scale, WHITE);  // Draw the map
+        DrawTexturePro(t_knight, knight_source_rect, knight_dest_rect, Vector2Zero(), 0,WHITE);  // Draw the knight
         EndDrawing();
     }
+#pragma region Texture Unloading
     UnloadTexture(t_game_map);
     UnloadTexture(t_knight_idle);
     UnloadTexture(t_knight_run);
+#pragma endregion
     CloseWindow();
 }
