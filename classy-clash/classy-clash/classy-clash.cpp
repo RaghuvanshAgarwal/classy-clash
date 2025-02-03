@@ -13,20 +13,69 @@ class character
 {
 public:
     Vector2 get_world_pos() const { return world_pos_; }
+    void set_screen_pos(int win_width, int win_height);
+    void set_map_pos(Vector2 min_map_pos, Vector2 max_map_pos);
+    void tick(float dt);
 
 private:
+    constexpr float update_time_{1.0f / 12.0f};
+    constexpr int max_frame_{6};
+    const float speed_{4.0f};
+    
     Texture2D texture_;
     Texture2D idle_texture_;
     Texture2D run_texture_;
     Vector2 world_pos_;
     Vector2 screen_pos_;
+    Vector2 min_map_pos_;
+    Vector2 max_map_pos_;
 
     float right_left_{1.0f};
     float running_time_{0.0f};
     int frame_{0};
-    constexpr float update_time_{1.0f / 12.0f};
-    constexpr int max_frame_{6};
 };
+
+void character::set_screen_pos(const int win_width, const int win_height)
+{
+    screen_pos_ = {
+        static_cast<float>(win_width) / 2.0f - 4.0f * 0.5f * static_cast<float>(texture_.width) / 6.0f,
+        static_cast<float>(win_height) / 2.0f - 4.0f * 0.5f * static_cast<float>(texture_.height)
+    };
+}
+
+void character::set_map_pos(const Vector2 min_map_pos, const Vector2 max_map_pos)
+{
+    min_map_pos_ = min_map_pos;
+    max_map_pos_ = max_map_pos;
+}
+
+void character::tick(const float dt)
+{
+    Vector2 direction{0.0f, 0.0f};
+    if (IsKeyDown(KEY_A)) direction.x -= 1.0f;
+    if (IsKeyDown(KEY_D)) direction.x += 1.0f;
+    if (IsKeyDown(KEY_W)) direction.y -= 1.0f;
+    if (IsKeyDown(KEY_S)) direction.y += 1.0f;
+
+    if (Vector2Length(direction) > 0.0f)
+    {
+        right_left_ = direction.x != 0.0f ? direction.x < 0.f ? -1.0f : 1.0f : right_left_;
+        world_pos_ = Vector2Add(world_pos_, Vector2Scale(Vector2Normalize(direction), speed_ * dt));
+        world_pos_ = Vector2Clamp(world_pos_, min_map_pos_, max_map_pos_);
+        texture_ = run_texture_;
+    }
+    else
+    {
+        texture_ = idle_texture_;
+    }
+
+    running_time_ += dt;
+    if (running_time_ >= update_time_)
+    {
+        frame_ = (frame_ + 1) % max_frame_;
+        running_time_ = 0.0f;
+    }
+}
 
 int main()
 {
