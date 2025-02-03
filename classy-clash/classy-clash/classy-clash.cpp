@@ -11,8 +11,21 @@ constexpr int map_scale{4};
 
 class character
 {
-    public:
-    private:
+public:
+    Vector2 get_world_pos() const { return world_pos_; }
+
+private:
+    Texture2D texture_;
+    Texture2D idle_texture_;
+    Texture2D run_texture_;
+    Vector2 world_pos_;
+    Vector2 screen_pos_;
+
+    float right_left_{1.0f};
+    float running_time_{0.0f};
+    int frame_{0};
+    constexpr float update_time_{1.0f / 12.0f};
+    constexpr int max_frame_{6};
 };
 
 int main()
@@ -92,8 +105,8 @@ int main()
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawTextureEx(t_game_map, map_pos, 0, map_scale, WHITE);  // Draw the map
-        DrawTexturePro(t_knight, knight_source_rect, knight_dest_rect, Vector2Zero(), 0,WHITE);  // Draw the knight
+        DrawTextureEx(t_game_map, map_pos, 0, map_scale, WHITE); // Draw the map
+        DrawTexturePro(t_knight, knight_source_rect, knight_dest_rect, Vector2Zero(), 0,WHITE); // Draw the knight
         EndDrawing();
     }
 #pragma region Texture Unloading

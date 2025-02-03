@@ -9,8 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f053898f-28b9-4e4b-b311-56dec893b12b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.classy-clash/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.classy-clash/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classy-clash/classy-clash.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/classy-clash/classy-clash.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classy-clash/nature_tileset/map.tiled-session" beforeDir="false" afterPath="$PROJECT_DIR$/classy-clash/nature_tileset/map.tiled-session" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +128,7 @@
       <workItem from="1738514441426" duration="5313000" />
       <workItem from="1738575724353" duration="147000" />
       <workItem from="1738582748971" duration="705000" />
-      <workItem from="1738585493603" duration="302000" />
+      <workItem from="1738585493603" duration="1414000" />
     </task>
     <servers />
   </component>
