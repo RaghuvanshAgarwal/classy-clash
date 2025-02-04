@@ -15,20 +15,22 @@ public:
     Vector2 get_world_pos() const { return world_pos_; }
     void set_screen_pos(int win_width, int win_height);
     void set_map_pos(Vector2 min_map_pos, Vector2 max_map_pos);
+    void set_textures(const Texture2D& idle_texture, const Texture2D& run_texture);
     void tick(float dt);
+    void draw() const;
 
 private:
-    constexpr float update_time_{1.0f / 12.0f};
-    constexpr int max_frame_{6};
-    const float speed_{4.0f};
+    float update_time_{1.0f / 12.0f};
+    int max_frame_{6};
+    float speed_{400.0f};
     
-    Texture2D texture_;
-    Texture2D idle_texture_;
-    Texture2D run_texture_;
-    Vector2 world_pos_;
-    Vector2 screen_pos_;
-    Vector2 min_map_pos_;
-    Vector2 max_map_pos_;
+    Texture2D texture_ {};
+    Texture2D idle_texture_ {};
+    Texture2D run_texture_ {};
+    Vector2 world_pos_ {};
+    Vector2 screen_pos_{};
+    Vector2 min_map_pos_{};
+    Vector2 max_map_pos_{};
 
     float right_left_{1.0f};
     float running_time_{0.0f};
@@ -47,6 +49,13 @@ void character::set_map_pos(const Vector2 min_map_pos, const Vector2 max_map_pos
 {
     min_map_pos_ = min_map_pos;
     max_map_pos_ = max_map_pos;
+}
+
+void character::set_textures(const Texture2D& idle_texture, const Texture2D& run_texture)
+{
+    idle_texture_ = idle_texture;
+    run_texture_ = run_texture;
+    texture_ = idle_texture_;
 }
 
 void character::tick(const float dt)
@@ -77,6 +86,25 @@ void character::tick(const float dt)
     }
 }
 
+void character::draw() const
+{
+    const Rectangle knight_source_rect{
+        static_cast<float>(frame_) * static_cast<float>(texture_.width) / 6.0f,
+        0,
+        right_left_ * static_cast<float>(texture_.width) / 6.0f,
+        static_cast<float>(texture_.height)
+    };
+
+    const Rectangle knight_dest_rect{
+        screen_pos_.x,
+        screen_pos_.y,
+        map_scale * static_cast<float>(texture_.width) / 6.0f,
+        map_scale * static_cast<float>(texture_.height)
+    };
+
+    DrawTexturePro(texture_, knight_source_rect, knight_dest_rect, Vector2Zero(), 0,WHITE);
+}
+
 int main()
 {
     InitWindow(screen_width, screen_height, "Classy Clash");
@@ -90,72 +118,29 @@ int main()
 #pragma endregion
 
 #pragma region Map Variables
-    const Vector2 min_map_pos{
-        -static_cast<float>(t_game_map.width * map_scale - screen_width),
-        -static_cast<float>(t_game_map.height * map_scale - screen_height)
+    const Vector2 max_map_pos{
+        static_cast<float>(t_game_map.width * map_scale - screen_width),
+        static_cast<float>(t_game_map.height * map_scale - screen_height)
     };
-    constexpr Vector2 max_map_pos{0, 0};
-    Vector2 map_pos{0, 0};
+    constexpr Vector2 min_map_pos{0, 0};
 #pragma endregion
 
-    Vector2 knight_pos{
-        (screen_width / 2.0f - 4.0f * 0.5f * static_cast<float>(t_knight_idle.width) / 6.0f),
-        static_cast<float>(screen_height) / 2.0f - 4.0f * 0.5f * static_cast<float>(t_knight_idle.height)
-    };
-    // right = 1, left = -1
-    float right_left{1.0f};
-    float running_time{0.0f};
-    constexpr float update_time{1.0f / 12.0f};
-    int frame{0};
-    constexpr int max_frame{6};
-    Texture2D t_knight;
 
-    constexpr float speed{4.0f};
+    character knight {};
+    knight.set_screen_pos(screen_width, screen_height);
+    knight.set_map_pos(min_map_pos, Vector2Scale(max_map_pos, 0.9785f));
+    knight.set_textures(t_knight_idle, t_knight_run);
+
+    
     while (!WindowShouldClose())
     {
-        Vector2 direction{0.0f, 0.0f};
-        if (IsKeyDown(KEY_A)) direction.x -= 1.0f;
-        if (IsKeyDown(KEY_D)) direction.x += 1.0f;
-        if (IsKeyDown(KEY_W)) direction.y -= 1.0f;
-        if (IsKeyDown(KEY_S)) direction.y += 1.0f;
-
-        if (Vector2Length(direction) > 0.0f)
-        {
-            right_left = direction.x != 0.0f ? direction.x < 0.f ? -1.0f : 1.0f : right_left;
-            map_pos = Vector2Subtract(map_pos, Vector2Scale(Vector2Normalize(direction), speed));
-            map_pos = Vector2Clamp(map_pos, min_map_pos, max_map_pos);
-            t_knight = t_knight_run;
-        }
-        else
-        {
-            t_knight = t_knight_idle;
-        }
-
-        running_time += GetFrameTime();
-        if (running_time >= update_time)
-        {
-            frame = (frame + 1) % max_frame;
-            running_time = 0.0f;
-        }
-
-        const Rectangle knight_source_rect{
-            static_cast<float>(frame) * static_cast<float>(t_knight.width) / 6.0f,
-            0,
-            right_left * static_cast<float>(t_knight.width) / 6.0f,
-            static_cast<float>(t_knight.height)
-        };
-
-        const Rectangle knight_dest_rect{
-            knight_pos.x,
-            knight_pos.y,
-            map_scale * static_cast<float>(t_knight.width) / 6.0f,
-            map_scale * static_cast<float>(t_knight.height)
-        };
-
+        const float dt = GetFrameTime();
+        knight.tick(dt);
+        Vector2 map_pos = Vector2Scale(knight.get_world_pos(), -1.0f);
         BeginDrawing();
         ClearBackground(RAYWHITE);
         DrawTextureEx(t_game_map, map_pos, 0, map_scale, WHITE); // Draw the map
-        DrawTexturePro(t_knight, knight_source_rect, knight_dest_rect, Vector2Zero(), 0,WHITE); // Draw the knight
+        knight.draw();
         EndDrawing();
     }
 #pragma region Texture Unloading
