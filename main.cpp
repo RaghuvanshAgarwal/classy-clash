@@ -24,9 +24,9 @@ private:
     int max_frame_{6};
     float speed_{400.0f};
     
-    Texture2D texture_ {};
-    Texture2D idle_texture_ {};
-    Texture2D run_texture_ {};
+    Texture2D texture_ {};      // Current active texture
+    Texture2D idle_texture_ {}; // Stored idle animation texture
+    Texture2D run_texture_ {};  // Stored run animation texture
     Vector2 world_pos_ {};
     Vector2 screen_pos_{};
     Vector2 min_map_pos_{};
