@@ -6,7 +6,7 @@ public:
     character(const Texture2D& idle_texture, const Texture2D& run_texture, float map_scale);
     Vector2 get_world_pos() const { return world_pos_; }
     void set_screen_pos(int win_width, int win_height);
-    void set_map_pos(Vector2 min_map_pos, Vector2 max_map_pos);
+    void undo_movement();
     void tick(float dt);
     void draw() const;
 
@@ -21,8 +21,7 @@ private:
     Texture2D run_texture_ {};  // Stored run animation texture
     Vector2 world_pos_ {};
     Vector2 screen_pos_{};
-    Vector2 min_map_pos_{};
-    Vector2 max_map_pos_{};
+    Vector2 last_world_pos_{};
 
     float right_left_{1.0f};
     float running_time_{0.0f};

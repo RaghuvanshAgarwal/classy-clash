@@ -19,24 +19,28 @@ int main()
     const Texture2D t_knight_run = LoadTexture("characters/knight_run_spritesheet.png");
 #pragma endregion
 
-#pragma region Map Variables
-    const Vector2 max_map_pos{
-        static_cast<float>(t_game_map.width * map_scale - screen_width),
-        static_cast<float>(t_game_map.height * map_scale - screen_height)
-    };
-    constexpr Vector2 min_map_pos{0, 0};
-#pragma endregion
-
-
     character knight(t_knight_idle, t_knight_run, map_scale);
     knight.set_screen_pos(screen_width, screen_height);
-    knight.set_map_pos(min_map_pos, Vector2Scale(max_map_pos, 1));
+
 
     
     while (!WindowShouldClose())
     {
         const float dt = GetFrameTime();
         knight.tick(dt);
+
+#pragma region Map Boundary Check
+        Vector2 current_world_pos = knight.get_world_pos();
+        if(current_world_pos.x < 0 ||
+        current_world_pos.y < 0 ||
+        current_world_pos.x > t_game_map.width * map_scale - screen_width ||
+        current_world_pos.y > t_game_map.height * map_scale - screen_height)
+        {
+            knight.undo_movement();
+        }
+#pragma endregion
+
+
         Vector2 map_pos = Vector2Scale(knight.get_world_pos(), -1.0f);
         BeginDrawing();
         ClearBackground(RAYWHITE);

@@ -21,14 +21,14 @@ void character::set_screen_pos(const int win_width, const int win_height)
     };
 }
 
-void character::set_map_pos(const Vector2 min_map_pos, const Vector2 max_map_pos)
+void character::undo_movement()
 {
-    min_map_pos_ = min_map_pos;
-    max_map_pos_ = max_map_pos;
+    world_pos_ = last_world_pos_;
 }
 
 void character::tick(const float dt)
 {
+    last_world_pos_ = world_pos_;
     Vector2 direction{0.0f, 0.0f};
     if (IsKeyDown(KEY_A)) direction.x -= 1.0f;
     if (IsKeyDown(KEY_D)) direction.x += 1.0f;
@@ -39,7 +39,6 @@ void character::tick(const float dt)
     {
         right_left_ = direction.x != 0.0f ? direction.x < 0.f ? -1.0f : 1.0f : right_left_;
         world_pos_ = Vector2Add(world_pos_, Vector2Scale(Vector2Normalize(direction), speed_ * dt));
-        world_pos_ = Vector2Clamp(world_pos_, min_map_pos_, max_map_pos_);
         texture_ = run_texture_;
     }
     else
