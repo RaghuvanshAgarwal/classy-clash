@@ -1,25 +1,22 @@
 #include "character.h"
 #include "raymath.h"
+#include "config.h"
 
 
-character::character(const Texture2D& idle_texture, const Texture2D& run_texture,  float map_scale)
+character::character(const Texture2D& idle_texture, const Texture2D& run_texture)
 {
     idle_texture_ = idle_texture;
     run_texture_ = run_texture;
     texture_ = idle_texture_;
-    width_ = map_scale * static_cast<float>(texture_.width) / max_frame_;
-    height_ = map_scale * static_cast<float>(texture_.height);
-    map_scale_ = map_scale;
-}
+    width_ = config::map_scale * static_cast<float>(texture_.width) / max_frame_;
+    height_ = config::map_scale * static_cast<float>(texture_.height);
 
-
-void character::set_screen_pos(const int win_width, const int win_height)
-{
     screen_pos_ = {
-        static_cast<float>(win_width) / 2.0f - map_scale_ * 0.5f * static_cast<float>(texture_.width) / max_frame_,
-        static_cast<float>(win_height) / 2.0f - map_scale_ * 0.5f * static_cast<float>(texture_.height)
+        static_cast<float>(config::screen_width) / 2.0f - 0.5f * width_,
+        static_cast<float>(config::screen_height) / 2.0f - 0.5f * height_
     };
 }
+
 
 void character::undo_movement()
 {

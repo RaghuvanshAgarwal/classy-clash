@@ -3,9 +3,8 @@
 class character
 {
 public:
-    character(const Texture2D& idle_texture, const Texture2D& run_texture, float map_scale);
+    character(const Texture2D& idle_texture, const Texture2D& run_texture);
     Vector2 get_world_pos() const { return world_pos_; }
-    void set_screen_pos(int win_width, int win_height);
     void undo_movement();
     void tick(float dt);
     void draw() const;
@@ -14,7 +13,6 @@ private:
     float update_time_{1.0f / 12.0f};
     int max_frame_{6};
     float speed_{400.0f};
-    float map_scale_{0.0f};
     
     Texture2D texture_ {};      // Current active texture
     Texture2D idle_texture_ {}; // Stored idle animation texture
