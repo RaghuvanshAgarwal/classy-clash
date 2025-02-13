@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "character.h"
+#include "prop.h"
 #include "config.h"
 
 int main()
@@ -13,10 +14,12 @@ int main()
     const Texture2D t_game_map = LoadTexture("nature_tileset/game-map_v2.png");
     const Texture2D t_knight_idle = LoadTexture("characters/knight_idle_spritesheet.png");
     const Texture2D t_knight_run = LoadTexture("characters/knight_run_spritesheet.png");
+    const Texture2D t_rock = LoadTexture("nature_tileset/rock.png");
 #pragma endregion
 
     character knight(t_knight_idle, t_knight_run);
-    
+    prop rock(Vector2{500, 500}, t_rock);
+
     while (!WindowShouldClose())
     {
         const float dt = GetFrameTime();
@@ -24,21 +27,21 @@ int main()
 
 #pragma region Map Boundary Check
         Vector2 current_world_pos = knight.get_world_pos();
-        if(current_world_pos.x < 0 ||
-        current_world_pos.y < 0 ||
-        current_world_pos.x > t_game_map.width * config::map_scale - config::screen_width ||
-        current_world_pos.y > t_game_map.height * config::map_scale - config::screen_height)
+        if (current_world_pos.x < 0 ||
+            current_world_pos.y < 0 ||
+            current_world_pos.x > t_game_map.width * config::map_scale - config::screen_width ||
+            current_world_pos.y > t_game_map.height * config::map_scale - config::screen_height)
         {
             knight.undo_movement();
         }
 
 #pragma endregion
 
-
         Vector2 map_pos = Vector2Scale(knight.get_world_pos(), -1.0f);
         BeginDrawing();
         ClearBackground(RAYWHITE);
         DrawTextureEx(t_game_map, map_pos, 0, config::map_scale, WHITE); // Draw the map
+        rock.draw(map_pos);
         knight.draw();
         EndDrawing();
     }
@@ -46,6 +49,7 @@ int main()
     UnloadTexture(t_game_map);
     UnloadTexture(t_knight_idle);
     UnloadTexture(t_knight_run);
+    UnloadTexture(t_rock);
 #pragma endregion
     CloseWindow();
 }
