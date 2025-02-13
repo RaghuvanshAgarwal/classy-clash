@@ -2,7 +2,9 @@
 #include "raymath.h"
 #include "config.h"
 
-
+/// @brief Constructor for the character class
+/// @param idle_texture The idle texture for the character
+/// @param run_texture The run texture for the character
 character::character(const Texture2D& idle_texture, const Texture2D& run_texture)
 {
     idle_texture_ = idle_texture;
@@ -17,12 +19,14 @@ character::character(const Texture2D& idle_texture, const Texture2D& run_texture
     };
 }
 
-
+/// @brief Undo the movement of the character
 void character::undo_movement()
 {
     world_pos_ = last_world_pos_;
 }
 
+/// @brief Tick the character
+/// @param dt The delta time
 void character::tick(const float dt)
 {
     last_world_pos_ = world_pos_;
@@ -51,6 +55,7 @@ void character::tick(const float dt)
     }
 }
 
+/// @brief Draw the character
 void character::draw() const
 {
     const Rectangle knight_source_rect{
