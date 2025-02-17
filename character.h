@@ -5,6 +5,7 @@ class character
 public:
     character(const Texture2D& idle_texture, const Texture2D& run_texture);
     Vector2 get_world_pos() const { return world_pos_; }
+    Rectangle get_collision_rect() const { return collison_rect_; }
     void undo_movement();
     void tick(float dt);
     void draw() const;
@@ -39,4 +40,6 @@ private:
     float width_{0.0f};
     /// @brief The height of the character
     float height_{0.0f};
+    /// @brief The Collision rectangle of the character
+    Rectangle collison_rect_{};
 };

@@ -17,6 +17,13 @@ character::character(const Texture2D& idle_texture, const Texture2D& run_texture
         static_cast<float>(config::screen_width) / 2.0f - 0.5f * width_,
         static_cast<float>(config::screen_height) / 2.0f - 0.5f * height_
     };
+
+    collison_rect_ = {
+        screen_pos_.x,
+        screen_pos_.y,
+        width_,
+        height_
+    };
 }
 
 /// @brief Undo the movement of the character
