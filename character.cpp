@@ -5,11 +5,8 @@
 /// @brief Constructor for the character class
 /// @param idle_texture The idle texture for the character
 /// @param run_texture The run texture for the character
-character::character(const Texture2D& idle_texture, const Texture2D& run_texture)
+character::character(const Texture2D &idle_texture, const Texture2D &run_texture) : texture_(idle_texture) ,idle_texture_(idle_texture), run_texture_(run_texture)
 {
-    idle_texture_ = idle_texture;
-    run_texture_ = run_texture;
-    texture_ = idle_texture_;
     width_ = config::map_scale * static_cast<float>(texture_.width) / max_frame_;
     height_ = config::map_scale * static_cast<float>(texture_.height);
 
@@ -65,19 +62,19 @@ void character::tick(const float dt)
 /// @brief Draw the character
 void character::draw() const
 {
-    const Rectangle knight_source_rect{
+    const Rectangle source{
         static_cast<float>(frame_) * static_cast<float>(texture_.width) / 6.0f,
         0,
         right_left_ * static_cast<float>(texture_.width) / 6.0f,
         static_cast<float>(texture_.height)
     };
 
-    const Rectangle knight_dest_rect{
+    const Rectangle dest{
         screen_pos_.x,
         screen_pos_.y,
         width_,
         height_
     };
 
-    DrawTexturePro(texture_, knight_source_rect, knight_dest_rect, Vector2Zero(), 0,WHITE);
+    DrawTexturePro(texture_, source, dest, Vector2Zero(), 0,WHITE);
 }
