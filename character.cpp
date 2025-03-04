@@ -1,80 +1,80 @@
-#include "character.h"
+#include "Character.h"
 #include "raymath.h"
-#include "config.h"
+#include "Config.h"
 
 /// @brief Constructor for the character class
 /// @param idle_texture The idle texture for the character
 /// @param run_texture The run texture for the character
-character::character(const Texture2D &idle_texture, const Texture2D &run_texture) : texture_(idle_texture) ,idle_texture_(idle_texture), run_texture_(run_texture)
+Character::Character(const Texture2D &idle_texture, const Texture2D &run_texture) : CurrentTexture(idle_texture), IdleTexture(idle_texture), RunTexture(run_texture)
 {
-    width_ = config::map_scale * static_cast<float>(texture_.width) / max_frame_;
-    height_ = config::map_scale * static_cast<float>(texture_.height);
+    Width = Config::kMapScale * static_cast<float>(CurrentTexture.width) / MaxFrame;
+    Height = Config::kMapScale * static_cast<float>(CurrentTexture.height);
 
-    screen_pos_ = {
-        static_cast<float>(config::screen_width) / 2.0f - 0.5f * width_,
-        static_cast<float>(config::screen_height) / 2.0f - 0.5f * height_
-    };
+    ScreenPosition = {
+        static_cast<float>(Config::kScreenWidth) / 2.0f - 0.5f * Width,
+        static_cast<float>(Config::kScreenHeight) / 2.0f - 0.5f * Height};
 
-    collison_rect_ = {
-        screen_pos_.x,
-        screen_pos_.y,
-        width_,
-        height_
-    };
+    CollisionRectangle = {
+        ScreenPosition.x,
+        ScreenPosition.y,
+        Width,
+        Height};
 }
 
 /// @brief Undo the movement of the character
-void character::undo_movement()
+void Character::UndoMovement()
 {
-    world_pos_ = last_world_pos_;
+    WorldPosition = LastWorldPosition;
 }
 
 /// @brief Tick the character
 /// @param dt The delta time
-void character::tick(const float dt)
+void Character::Tick(const float dt)
 {
-    last_world_pos_ = world_pos_;
+    LastWorldPosition = WorldPosition;
     Vector2 direction{0.0f, 0.0f};
-    if (IsKeyDown(KEY_A)) direction.x -= 1.0f;
-    if (IsKeyDown(KEY_D)) direction.x += 1.0f;
-    if (IsKeyDown(KEY_W)) direction.y -= 1.0f;
-    if (IsKeyDown(KEY_S)) direction.y += 1.0f;
+    if (IsKeyDown(KEY_A))
+        direction.x -= 1.0f;
+    if (IsKeyDown(KEY_D))
+        direction.x += 1.0f;
+    if (IsKeyDown(KEY_W))
+        direction.y -= 1.0f;
+    if (IsKeyDown(KEY_S))
+        direction.y += 1.0f;
 
     if (Vector2Length(direction) > 0.0f)
     {
-        right_left_ = direction.x != 0.0f ? direction.x < 0.f ? -1.0f : 1.0f : right_left_;
-        world_pos_ = Vector2Add(world_pos_, Vector2Scale(Vector2Normalize(direction), speed_ * dt));
-        texture_ = run_texture_;
+        FacingDirection = direction.x != 0.0f ? direction.x < 0.f ? -1.0f : 1.0f : FacingDirection;
+        WorldPosition = Vector2Add(WorldPosition, Vector2Scale(Vector2Normalize(direction), Speed * dt));
+        CurrentTexture = RunTexture;
     }
     else
     {
-        texture_ = idle_texture_;
+        CurrentTexture = IdleTexture;
     }
 
-    running_time_ += dt;
-    if (running_time_ >= update_time_)
+    RunningTime += dt;
+    if (RunningTime >= UpdateTime)
     {
-        frame_ = (frame_ + 1) % max_frame_;
-        running_time_ = 0.0f;
+        CurrentFrameIndex = (CurrentFrameIndex + 1) % MaxFrame;
+        RunningTime = 0.0f;
     }
 }
 
 /// @brief Draw the character
-void character::draw() const
+void Character::Draw() const
 {
     const Rectangle source{
-        static_cast<float>(frame_) * static_cast<float>(texture_.width) / 6.0f,
+        static_cast<float>(CurrentFrameIndex) * static_cast<float>(CurrentTexture.width) / 6.0f,
         0,
-        right_left_ * static_cast<float>(texture_.width) / 6.0f,
-        static_cast<float>(texture_.height)
-    };
+        FacingDirection * static_cast<float>(CurrentTexture.width) / 6.0f,
+        static_cast<float>(CurrentTexture.height)};
 
     const Rectangle dest{
-        screen_pos_.x,
-        screen_pos_.y,
-        width_,
-        height_
-    };
+        ScreenPosition.x,
+        ScreenPosition.y,
+        Width,
+        Height};
 
-    DrawTexturePro(texture_, source, dest, Vector2Zero(), 0,WHITE);
+    DrawTexturePro(CurrentTexture, source, dest, Vector2Zero(), 0, WHITE);
 }

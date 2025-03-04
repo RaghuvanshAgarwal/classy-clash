@@ -1,24 +1,24 @@
 #include "prop.h"
-#include "config.h"
+#include "Config.h"
 #include "raymath.h"
 
-prop::prop(Vector2 pos, Texture2D text) : world_pos_(pos), texture_(text)
+Prop::Prop(Vector2 pos, Texture2D text) : WorldPosition(pos), Texture(text)
 {
-    scale_ = config::map_scale;
+    Scale = Config::kMapScale;
 }
 
-void prop::draw(Vector2 map_pos) const
+void Prop::Draw(Vector2 map_pos) const
 {
-    Vector2 screen_pos = Vector2Add(world_pos_, map_pos);
-    DrawTextureEx(texture_, screen_pos, 0, scale_, WHITE);
+    Vector2 screen_pos = Vector2Add(WorldPosition, map_pos);
+    DrawTextureEx(Texture, screen_pos, 0, Scale, WHITE);
 }
 
-Rectangle prop::get_collision_rect(const Vector2 map_pos) const
+Rectangle Prop::GetCollisionRectangle(const Vector2 map_pos) const
 {
-    Vector2 screen_pos = Vector2Add(world_pos_, map_pos);
+    Vector2 screen_pos = Vector2Add(WorldPosition, map_pos);
     return Rectangle{
         screen_pos.x,
         screen_pos.y,
-        static_cast<float>(texture_.width) * scale_,
-        static_cast<float>(texture_.height) * scale_};
+        static_cast<float>(Texture.width) * Scale,
+        static_cast<float>(Texture.height) * Scale};
 }

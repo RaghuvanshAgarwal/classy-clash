@@ -1,52 +1,52 @@
 #include "raylib.h"
 #include "raymath.h"
-#include "enemy.h"
-#include "config.h"
+#include "Enemy.h"
+#include "Config.h"
 
-enemy::enemy(Texture2D idle, Texture2D run, Vector2 pos) : texture_(idle), idle_texture_(idle), run_texture_(run), world_pos_(pos)
+Enemy::Enemy(Texture2D idle, Texture2D run, Vector2 pos) : CurrentTexture(idle), IdleTexture(idle), RunTexture(run), WorldPosition(pos)
 {
-    width_ = config::map_scale * static_cast<float>(texture_.width) / max_frame_;
-    height_ = config::map_scale * static_cast<float>(texture_.height);
+    Width = Config::kMapScale * static_cast<float>(CurrentTexture.width) / MaxFrame;
+    Height = Config::kMapScale * static_cast<float>(CurrentTexture.height);
 }
 
-void enemy::undo_movement()
+void Enemy::UndoMovement()
 {
-    world_pos_ = last_world_pos_;
+    WorldPosition = LastWorldPosition;
 }
 
-void enemy::tick(float dt)
+void Enemy::Tick(float dt)
 {
-    last_world_pos_ = world_pos_;
-    running_time_ += dt;
-    if (running_time_ >= update_time_)
+    LastWorldPosition = WorldPosition;
+    RunningTime += dt;
+    if (RunningTime >= UpdateTime)
     {
-        frame_ = (frame_ + 1) % max_frame_;
-        running_time_ = 0.0f;
+        CurrentFrame = (CurrentFrame + 1) % MaxFrame;
+        RunningTime = 0.0f;
     }
 }
 
-void enemy::draw() const
+void Enemy::Draw() const
 {
     const Rectangle source{
-        static_cast<float>(frame_) * static_cast<float>(texture_.width) / 6.0f,
+        static_cast<float>(CurrentFrame) * static_cast<float>(CurrentTexture.width) / 6.0f,
         0,
-        right_left_ * static_cast<float>(texture_.width) / 6.0f,
-        static_cast<float>(texture_.height)};
+        FacingDirection * static_cast<float>(CurrentTexture.width) / 6.0f,
+        static_cast<float>(CurrentTexture.height)};
 
     const Rectangle dest{
-        screen_pos_.x,
-        screen_pos_.y,
-        width_,
-        height_};
+        ScreenPosition.x,
+        ScreenPosition.y,
+        Width,
+        Height};
 
-    DrawTexturePro(texture_, source, dest, Vector2Zero(), 0, WHITE);
+    DrawTexturePro(CurrentTexture, source, dest, Vector2Zero(), 0, WHITE);
 }
 
-Rectangle enemy::get_collision_rect() const
+Rectangle Enemy::GetCollisionRectangle() const
 {
     return Rectangle{
-        screen_pos_.x,
-        screen_pos_.y,
-        width_,
-        height_};
+        ScreenPosition.x,
+        ScreenPosition.y,
+        Width,
+        Height};
 }

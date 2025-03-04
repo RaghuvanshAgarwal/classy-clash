@@ -1,45 +1,51 @@
-#include "raylib.h"
+#ifndef CHARACTER_H
+#define CHARACTER_H
 
-class character
+#include "raylib.h"
+#include "BaseCharacter.h"
+
+class Character : public BaseCharacter
 {
 public:
-    character(const Texture2D& idle_texture, const Texture2D& run_texture);
-    Vector2 get_world_pos() const { return world_pos_; }
-    Rectangle get_collision_rect() const { return collison_rect_; }
-    void undo_movement();
-    void tick(float dt);
-    void draw() const;
+    Character(const Texture2D &idle_texture, const Texture2D &run_texture);
+    Vector2 GetWorldPosition() const { return WorldPosition; }
+    Rectangle GetCollisionRectangle() const { return CollisionRectangle; }
+    void UndoMovement();
+    void Tick(float dt);
+    void Draw() const;
 
 private:
     /// @brief The update time of the character
-    float update_time_{1.0f / 12.0f};
+    float UpdateTime{1.0f / 12.0f};
     /// @brief The max frame of the character
-    int max_frame_{6};
+    int MaxFrame{6};
     /// @brief The speed of the character
-    float speed_{400.0f};
-    
+    float Speed{400.0f};
+
     /// @brief The current active texture
-    Texture2D texture_ {};      
+    Texture2D CurrentTexture{};
     /// @brief The stored idle animation texture
-    Texture2D idle_texture_ {}; 
+    Texture2D IdleTexture{};
     /// @brief The stored run animation texture
-    Texture2D run_texture_ {}; 
+    Texture2D RunTexture{};
     /// @brief The world position of the character
-    Vector2 world_pos_ {};
+    Vector2 WorldPosition{};
     /// @brief The screen position of the character
-    Vector2 screen_pos_{};
+    Vector2 ScreenPosition{};
     /// @brief The last world position of the character
-    Vector2 last_world_pos_{};
+    Vector2 LastWorldPosition{};
     /// @brief The right left direction of the character
-    float right_left_{1.0f};
+    float FacingDirection{1.0f};
     /// @brief The running time of the character
-    float running_time_{0.0f};
+    float RunningTime{0.0f};
     /// @brief The frame of the character
-    int frame_{0};
+    int CurrentFrameIndex{0};
     /// @brief The width of the character
-    float width_{0.0f};
+    float Width{0.0f};
     /// @brief The height of the character
-    float height_{0.0f};
+    float Height{0.0f};
     /// @brief The Collision rectangle of the character
-    Rectangle collison_rect_{};
+    Rectangle CollisionRectangle{};
 };
+
+#endif // CHARACTER_H
