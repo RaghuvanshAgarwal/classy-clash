@@ -5,8 +5,11 @@
 /// @brief Constructor for the character class
 /// @param idle_texture The idle texture for the character
 /// @param run_texture The run texture for the character
-Character::Character(const Texture2D &idle_texture, const Texture2D &run_texture) : CurrentTexture(idle_texture), IdleTexture(idle_texture), RunTexture(run_texture)
+Character::Character(const Texture2D &idle_texture, const Texture2D &run_texture)
 {
+    IdleTexture = idle_texture;
+    RunTexture = run_texture;
+    CurrentTexture = idle_texture;
     Width = Config::kMapScale * static_cast<float>(CurrentTexture.width) / MaxFrame;
     Height = Config::kMapScale * static_cast<float>(CurrentTexture.height);
 
@@ -19,12 +22,6 @@ Character::Character(const Texture2D &idle_texture, const Texture2D &run_texture
         ScreenPosition.y,
         Width,
         Height};
-}
-
-/// @brief Undo the movement of the character
-void Character::UndoMovement()
-{
-    WorldPosition = LastWorldPosition;
 }
 
 /// @brief Tick the character
@@ -53,28 +50,10 @@ void Character::Tick(const float dt)
         CurrentTexture = IdleTexture;
     }
 
-    RunningTime += dt;
-    if (RunningTime >= UpdateTime)
-    {
-        CurrentFrameIndex = (CurrentFrameIndex + 1) % MaxFrame;
-        RunningTime = 0.0f;
-    }
+    BaseCharacter::Tick(dt);
 }
 
-/// @brief Draw the character
-void Character::Draw() const
+Rectangle Character::GetCollisionRectangle()
 {
-    const Rectangle source{
-        static_cast<float>(CurrentFrameIndex) * static_cast<float>(CurrentTexture.width) / 6.0f,
-        0,
-        FacingDirection * static_cast<float>(CurrentTexture.width) / 6.0f,
-        static_cast<float>(CurrentTexture.height)};
-
-    const Rectangle dest{
-        ScreenPosition.x,
-        ScreenPosition.y,
-        Width,
-        Height};
-
-    DrawTexturePro(CurrentTexture, source, dest, Vector2Zero(), 0, WHITE);
+    return CollisionRectangle;
 }
