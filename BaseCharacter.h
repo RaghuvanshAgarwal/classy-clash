@@ -6,7 +6,7 @@
 class BaseCharacter
 {
 public:
-    BaseCharacter();
+    BaseCharacter(const Texture2D &idle_texture, const Texture2D &run_texture);
     virtual void Tick(float dt);
     virtual Rectangle GetCollisionRectangle();
     Vector2 GetWorldPosition() const { return WorldPosition; }

@@ -3,14 +3,8 @@
 #include "Enemy.h"
 #include "Config.h"
 
-Enemy::Enemy(Texture2D idle, Texture2D run, Vector2 pos)
+Enemy::Enemy(const Texture2D &idle_texture, const Texture2D &run_texture, Vector2 pos) : BaseCharacter(idle_texture, run_texture)
 {
-    CurrentTexture = idle;
-    IdleTexture = idle;
-    RunTexture = run;
-    WorldPosition = pos;
-    Width = Config::kMapScale * static_cast<float>(CurrentTexture.width) / MaxFrame;
-    Height = Config::kMapScale * static_cast<float>(CurrentTexture.height);
 }
 
 void Enemy::Tick(float dt)

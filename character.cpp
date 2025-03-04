@@ -5,14 +5,8 @@
 /// @brief Constructor for the character class
 /// @param idle_texture The idle texture for the character
 /// @param run_texture The run texture for the character
-Character::Character(const Texture2D &idle_texture, const Texture2D &run_texture)
+Character::Character(const Texture2D &idle_texture, const Texture2D &run_texture) : BaseCharacter(idle_texture, run_texture)
 {
-    IdleTexture = idle_texture;
-    RunTexture = run_texture;
-    CurrentTexture = idle_texture;
-    Width = Config::kMapScale * static_cast<float>(CurrentTexture.width) / MaxFrame;
-    Height = Config::kMapScale * static_cast<float>(CurrentTexture.height);
-
     ScreenPosition = {
         static_cast<float>(Config::kScreenWidth) / 2.0f - 0.5f * Width,
         static_cast<float>(Config::kScreenHeight) / 2.0f - 0.5f * Height};

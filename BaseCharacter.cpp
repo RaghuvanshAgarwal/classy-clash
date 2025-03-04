@@ -1,8 +1,14 @@
 #include "BaseCharacter.h"
+#include "Config.h"
 #include "raymath.h"
 
-BaseCharacter::BaseCharacter()
+BaseCharacter::BaseCharacter(const Texture2D &idle_texture, const Texture2D &run_texture)
 {
+    IdleTexture = idle_texture;
+    RunTexture = run_texture;
+    CurrentTexture = idle_texture;
+    Width = Config::kMapScale * static_cast<float>(CurrentTexture.width) / MaxFrame;
+    Height = Config::kMapScale * static_cast<float>(CurrentTexture.height);
 }
 
 void BaseCharacter::UndoMovement()
@@ -40,7 +46,9 @@ void BaseCharacter::Draw() const
 Rectangle BaseCharacter::GetCollisionRectangle()
 {
     return Rectangle{
-        ScreenPosition.x, +ScreenPosition.y,
+        ScreenPosition.x,
+        ScreenPosition.y,
         Width,
-        Height};
+        Height,
+    };
 }
