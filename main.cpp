@@ -27,6 +27,7 @@ int main()
         Prop(Vector2{600.0f, 400.0f}, tLog)};
 
     Enemy goblin(tGoblinIdle, tGoblinRun, Vector2{400.0f, 400.0f});
+    goblin.SetTarget(&knight);
 
     while (!WindowShouldClose())
     {
