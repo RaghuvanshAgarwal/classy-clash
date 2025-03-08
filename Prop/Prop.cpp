@@ -1,6 +1,7 @@
+#pragma once
 #include "prop.h"
-#include "Config.h"
 #include "raymath.h"
+#include "../Config.h"
 
 Prop::Prop(Vector2 pos, Texture2D text) : WorldPosition(pos), Texture(text)
 {
@@ -20,5 +21,5 @@ Rectangle Prop::GetCollisionRectangle(const Vector2 map_pos) const
         screen_pos.x,
         screen_pos.y,
         static_cast<float>(Texture.width) * Scale,
-        static_cast<float>(Texture.height) * Scale};
+        static_cast<float>(Texture.height) * Scale };
 }

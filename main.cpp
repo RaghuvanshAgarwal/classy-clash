@@ -1,10 +1,10 @@
 #include <iostream>
 #include "raylib.h"
 #include "raymath.h"
-#include "Character.h"
-#include "Prop.h"
+#include "Character/Character.h"
+#include "Prop/Prop.h"
 #include "Config.h"
-#include "Enemy.h"
+#include "Enemy/Enemy.h"
 
 int main()
 {
@@ -24,10 +24,11 @@ int main()
     Character knight(tKnightIdle, tKnightRun);
     Prop props[2] = {
         Prop(Vector2{400.0f, 600.0f}, tRock),
-        Prop(Vector2{600.0f, 400.0f}, tLog)};
+        Prop(Vector2{600.0f, 400.0f}, tLog) };
 
-    Enemy goblin(tGoblinIdle, tGoblinRun, Vector2{400.0f, 400.0f});
+    Enemy goblin(tGoblinIdle, tGoblinRun, Vector2{ 400.0f, 400.0f });
     goblin.SetTarget(&knight);
+    goblin.SetSpeed(150.0f);
 
     while (!WindowShouldClose())
     {
@@ -46,7 +47,7 @@ int main()
 #pragma endregion
 
         const Vector2 mapPosition = Vector2Scale(knight.GetWorldPosition(), -1.0f);
-        for (Prop &p : props)
+        for (Prop& p : props)
         {
             if (CheckCollisionRecs(knight.GetCollisionRectangle(), p.GetCollisionRectangle(mapPosition)))
             {
@@ -59,7 +60,7 @@ int main()
         BeginDrawing();
         ClearBackground(RAYWHITE);
         DrawTextureEx(tGameMap, mapPosition, 0, Config::kMapScale, WHITE); // Draw the map
-        for (const Prop &p : props)
+        for (const Prop& p : props)
         {
             p.Draw(mapPosition);
         }

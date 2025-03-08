@@ -1,6 +1,4 @@
-#ifndef PROP_H
-#define PROP_H
-
+#pragma once
 #include "raylib.h"
 
 class Prop
@@ -15,5 +13,3 @@ private:
     Texture2D Texture;
     float Scale{};
 };
-
-#endif // PROP_H
