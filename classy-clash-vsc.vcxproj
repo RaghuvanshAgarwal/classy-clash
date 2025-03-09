@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="BaseCharacter\BaseCharacter.cpp" />
     <ClCompile Include="Character\Character.cpp" />
+    <ClCompile Include="HealthBar\HealthBar.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Enemy\Enemy.cpp" />
     <ClCompile Include="Prop\Prop.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="Character\Character.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Enemy\Enemy.h" />
+    <ClInclude Include="HealthBar\HealthBar.h" />
     <ClInclude Include="Prop\Prop.h" />
   </ItemGroup>
   <ItemGroup>

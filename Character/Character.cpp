@@ -16,6 +16,7 @@ Character::Character(const Texture2D& idleTexture, const Texture2D& runTexture)
 		Height,
 	};
 	tSwordTexture = nullptr;
+	CurrentHealth = MaxHealth;
 }
 
 /// @brief Tick the character
@@ -93,8 +94,8 @@ void Character::DrawSword() const {
 
 void Character::TakeDamage(float damage) {
 	if (!GetIsAlive()) return;
-	Health -= damage;
-	if (Health <= 0.0f) {
+	CurrentHealth -= damage;
+	if (CurrentHealth <= 0.0f) {
 		SetIsAlive(false);
 	}
 }

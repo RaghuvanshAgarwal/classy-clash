@@ -18,7 +18,7 @@ void Enemy::Tick(float dt) {
 	if (!GetIsAlive()) return;
 	LastWorldPosition = WorldPosition;
 	MoveDirection = Vector2Zero();
-	if (Vector2Distance(GetScreenPosition(), Target->GetScreenPosition()) > 70)
+	if (Vector2Distance(GetScreenPosition(), Target->GetScreenPosition()) > 50)
 	{
 		FollowPlayer();
 	}

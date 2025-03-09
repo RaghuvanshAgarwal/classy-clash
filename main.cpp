@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "Enemy/Enemy.h"
 #include "Prop/Prop.h"
+#include "HealthBar/HealthBar.h"
 #include "raylib.h"
 #include "raymath.h"
 
@@ -27,6 +28,7 @@ int main() {
 #pragma endregion
 
 	Character knight(tKnightIdle, tKnightRun);
+	HealthBar healthBar(Rectangle{ 10, 10, 100, 20 });
 	knight.SetSwordTexture(const_cast<Texture*>(&tSword));
 	Prop props[2] = { Prop(Vector2{400.0f, 600.0f}, tRock),
 					 Prop(Vector2{600.0f, 400.0f}, tLog) };
@@ -74,7 +76,16 @@ int main() {
 			p.Draw(mapPosition);
 		}
 		goblin.Draw();
-		knight.Draw();
+		if (knight.GetIsAlive()) {
+			knight.Draw();
+			healthBar.Draw(knight.GetCurrentHealth(), knight.GetMaxHealth());
+		}
+		else {
+			int offset = MeasureText("Game Over", 40);
+			DrawText("Game Over", Config::kScreenWidth / 2 - offset / 2,
+				Config::kScreenHeight / 2 - 40, 40, RED);
+		}
+		
 		EndDrawing();
 	}
 #pragma region Texture Unloading
