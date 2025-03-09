@@ -1,81 +1,91 @@
 #include <iostream>
-#include "raylib.h"
-#include "raymath.h"
+
 #include "Character/Character.h"
-#include "Prop/Prop.h"
 #include "Config.h"
 #include "Enemy/Enemy.h"
+#include "Prop/Prop.h"
+#include "raylib.h"
+#include "raymath.h"
 
-int main()
-{
-    InitWindow(Config::kScreenWidth, Config::kScreenHeight, "Classy Clash");
-    SetTargetFPS(60);
+int main() {
+	InitWindow(Config::kScreenWidth, Config::kScreenHeight, "Classy Clash");
+	SetTargetFPS(60);
 
 #pragma region Texture Loading
-    const Texture2D tGameMap = LoadTexture("nature_tileset/game-map_v2.png");
-    const Texture2D tKnightIdle = LoadTexture("characters/knight_idle_spritesheet.png");
-    const Texture2D tKnightRun = LoadTexture("characters/knight_run_spritesheet.png");
-    const Texture2D tRock = LoadTexture("nature_tileset/rock.png");
-    const Texture2D tLog = LoadTexture("nature_tileset/log.png");
-    const Texture2D tGoblinIdle = LoadTexture("characters/goblin_idle_spritesheet.png");
-    const Texture2D tGoblinRun = LoadTexture("characters/goblin_run_spritesheet.png");
+	const Texture2D tGameMap = LoadTexture("nature_tileset/game-map_v2.png");
+	const Texture2D tKnightIdle =
+		LoadTexture("characters/knight_idle_spritesheet.png");
+	const Texture2D tKnightRun =
+		LoadTexture("characters/knight_run_spritesheet.png");
+	const Texture2D tRock = LoadTexture("nature_tileset/rock.png");
+	const Texture2D tLog = LoadTexture("nature_tileset/log.png");
+	const Texture2D tGoblinIdle =
+		LoadTexture("characters/goblin_idle_spritesheet.png");
+	const Texture2D tGoblinRun =
+		LoadTexture("characters/goblin_run_spritesheet.png");
+	const Texture2D tSword = LoadTexture("characters/weapon_sword.png");
 #pragma endregion
 
-    Character knight(tKnightIdle, tKnightRun);
-    Prop props[2] = {
-        Prop(Vector2{400.0f, 600.0f}, tRock),
-        Prop(Vector2{600.0f, 400.0f}, tLog) };
+	Character knight(tKnightIdle, tKnightRun);
+	knight.SetSwordTexture(const_cast<Texture*>(&tSword));
+	Prop props[2] = { Prop(Vector2{400.0f, 600.0f}, tRock),
+					 Prop(Vector2{600.0f, 400.0f}, tLog) };
 
-    Enemy goblin(tGoblinIdle, tGoblinRun, Vector2{ 400.0f, 400.0f });
-    goblin.SetTarget(&knight);
-    goblin.SetSpeed(150.0f);
+	Enemy goblin(tGoblinIdle, tGoblinRun, Vector2{ 400.0f, 400.0f });
+	goblin.SetTarget(&knight);
+	goblin.SetSpeed(150.0f);
 
-    while (!WindowShouldClose())
-    {
-        const float dt = GetFrameTime();
-        knight.Tick(dt);
+	while (!WindowShouldClose()) {
+		const float dt = GetFrameTime();
+		knight.Tick(dt);
 
 #pragma region Map Boundary Check
-        Vector2 currentWorldPosition = knight.GetWorldPosition();
-        if (currentWorldPosition.x < 0 ||
-            currentWorldPosition.y < 0 ||
-            currentWorldPosition.x > tGameMap.width * Config::kMapScale - Config::kScreenWidth ||
-            currentWorldPosition.y > tGameMap.height * Config::kMapScale - Config::kScreenHeight)
-        {
-            knight.UndoMovement();
-        }
+		Vector2 currentWorldPosition = knight.GetWorldPosition();
+		if (currentWorldPosition.x < 0 || currentWorldPosition.y < 0 ||
+			currentWorldPosition.x >
+			tGameMap.width * Config::kMapScale - Config::kScreenWidth ||
+			currentWorldPosition.y >
+			tGameMap.height * Config::kMapScale - Config::kScreenHeight) {
+			knight.UndoMovement();
+		}
 #pragma endregion
 
-        const Vector2 mapPosition = Vector2Scale(knight.GetWorldPosition(), -1.0f);
-        for (Prop& p : props)
-        {
-            if (CheckCollisionRecs(knight.GetCollisionRectangle(), p.GetCollisionRectangle(mapPosition)))
-            {
-                knight.UndoMovement();
-            }
-        }
+		const Vector2 mapPosition = Vector2Scale(knight.GetWorldPosition(), -1.0f);
+		for (Prop& p : props) {
+			if (CheckCollisionRecs(knight.GetCollisionRectangle(),
+				p.GetCollisionRectangle(mapPosition))) {
+				knight.UndoMovement();
+			}
+		}
 
-        goblin.Tick(dt);
+		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+			if (CheckCollisionRecs(*knight.GetSwordCollisionRectangle(), goblin.GetCollisionRectangle())) {
+				goblin.SetIsAlive(false);
+			}
+		}
 
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        DrawTextureEx(tGameMap, mapPosition, 0, Config::kMapScale, WHITE); // Draw the map
-        for (const Prop& p : props)
-        {
-            p.Draw(mapPosition);
-        }
-        goblin.Draw();
-        knight.Draw();
-        EndDrawing();
-    }
+		goblin.Tick(dt);
+
+		BeginDrawing();
+		ClearBackground(RAYWHITE);
+		DrawTextureEx(tGameMap, mapPosition, 0, Config::kMapScale,
+			WHITE);  // Draw the map
+		for (const Prop& p : props) {
+			p.Draw(mapPosition);
+		}
+		goblin.Draw();
+		knight.Draw();
+		EndDrawing();
+	}
 #pragma region Texture Unloading
-    UnloadTexture(tGameMap);
-    UnloadTexture(tKnightIdle);
-    UnloadTexture(tKnightRun);
-    UnloadTexture(tRock);
-    UnloadTexture(tLog);
-    UnloadTexture(tGoblinIdle);
-    UnloadTexture(tGoblinRun);
+	UnloadTexture(tGameMap);
+	UnloadTexture(tKnightIdle);
+	UnloadTexture(tKnightRun);
+	UnloadTexture(tRock);
+	UnloadTexture(tLog);
+	UnloadTexture(tGoblinIdle);
+	UnloadTexture(tGoblinRun);
+	UnloadTexture(tSword);
 #pragma endregion
-    CloseWindow();
+	CloseWindow();
 }
