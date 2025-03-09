@@ -25,6 +25,10 @@ int main() {
 	const Texture2D tGoblinRun =
 		LoadTexture("characters/goblin_run_spritesheet.png");
 	const Texture2D tSword = LoadTexture("characters/weapon_sword.png");
+	const Texture2D tSlimeIdle =
+		LoadTexture("characters/slime_idle_spritesheet.png");
+	const Texture2D tSlimeRun =
+		LoadTexture("characters/slime_run_spritesheet.png");
 #pragma endregion
 
 	Character knight(tKnightIdle, tKnightRun);
@@ -34,8 +38,12 @@ int main() {
 					 Prop(Vector2{600.0f, 400.0f}, tLog) };
 
 	Enemy goblin(tGoblinIdle, tGoblinRun, Vector2{ 400.0f, 400.0f });
-	goblin.SetTarget(&knight);
-	goblin.SetSpeed(150.0f);
+	Enemy slime(tSlimeIdle, tSlimeRun, Vector2{ 600.0f, 600.0f });
+	Enemy* enemies[2] = { &goblin, &slime };
+	for (Enemy* enemy : enemies) {
+		enemy->SetTarget(&knight);
+		enemy->SetSpeed(150.0f);
+	}
 
 	while (!WindowShouldClose()) {
 		const float dt = GetFrameTime();
@@ -61,12 +69,17 @@ int main() {
 		}
 
 		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-			if (CheckCollisionRecs(*knight.GetSwordCollisionRectangle(), goblin.GetCollisionRectangle())) {
-				goblin.SetIsAlive(false);
+			for (Enemy* enemy : enemies) {
+				if (CheckCollisionRecs(*knight.GetSwordCollisionRectangle(), enemy->GetCollisionRectangle())) {
+					enemy->SetIsAlive(false);
+				}
 			}
 		}
 
-		goblin.Tick(dt);
+		for (Enemy* enemy : enemies) {
+			enemy->Tick(dt);
+		}
+		
 
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
@@ -75,7 +88,9 @@ int main() {
 		for (const Prop& p : props) {
 			p.Draw(mapPosition);
 		}
-		goblin.Draw();
+		for (Enemy* enemy : enemies) {
+			enemy->Draw();
+		}
 		if (knight.GetIsAlive()) {
 			knight.Draw();
 			healthBar.Draw(knight.GetCurrentHealth(), knight.GetMaxHealth());
@@ -97,6 +112,8 @@ int main() {
 	UnloadTexture(tGoblinIdle);
 	UnloadTexture(tGoblinRun);
 	UnloadTexture(tSword);
+	UnloadTexture(tSlimeIdle);
+	UnloadTexture(tSlimeRun);
 #pragma endregion
 	CloseWindow();
 }
