@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <cstdio>
 
 #include "Character/Character.h"
 #include "Config.h"
@@ -57,6 +59,8 @@ int main() {
 
 	Enemy* enemyArray[10];
 	CreateEnemyArray(enemyArray, tGoblinIdle, tGoblinRun, tSlimeIdle, tSlimeRun, knight);
+	int enemyKilled = 0;
+	int waves = 0;
 
 	while (!WindowShouldClose()) {
 		const float dt = GetFrameTime();
@@ -64,7 +68,6 @@ int main() {
 
 #pragma region Map Boundary Check
 		Vector2 currentWorldPosition = knight.GetWorldPosition();
-		std::cout << currentWorldPosition.x << " " << currentWorldPosition.y << "\n";
 		if (currentWorldPosition.x < 0 || currentWorldPosition.y < 0 ||
 			currentWorldPosition.x >
 			tGameMap.width * Config::kMapScale - Config::kScreenWidth ||
@@ -86,6 +89,7 @@ int main() {
 			for (Enemy* enemy : enemyArray) {
 				if (CheckCollisionRecs(*knight.GetSwordCollisionRectangle(), enemy->GetCollisionRectangle())) {
 					enemy->SetIsAlive(false);
+					enemyKilled++;
 				}
 			}
 		}
@@ -107,6 +111,7 @@ int main() {
 				enemyArray[i] = nullptr;
 			}
 			CreateEnemyArray(enemyArray, tGoblinIdle, tGoblinRun, tSlimeIdle, tSlimeRun, knight);
+			waves++;
 		}
 		
 
@@ -125,9 +130,11 @@ int main() {
 			healthBar.Draw(knight.GetCurrentHealth(), knight.GetMaxHealth());
 		}
 		else {
-			int offset = MeasureText("Game Over", 40);
-			DrawText("Game Over", Config::kScreenWidth / 2 - offset / 2,
-				Config::kScreenHeight / 2 - 40, 40, RED);
+            std::string gameOverText = "Game Over\nWaves Survived: " + std::to_string(waves) + "\nEnemies Killed: " + std::to_string(enemyKilled);
+			const int fontSize = 30;
+			int gameOffset = MeasureText(gameOverText.c_str(), fontSize);
+			DrawText(gameOverText.c_str(), Config::kScreenWidth / 2 - gameOffset / 2,
+				Config::kScreenHeight / 2 - fontSize, fontSize, RED);
 		}
 		
 		EndDrawing();
