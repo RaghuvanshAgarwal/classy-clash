@@ -15,12 +15,15 @@ Enemy::Enemy(const Texture2D& idleTexture, const Texture2D& runTexture,
 }
 
 void Enemy::Tick(float dt) {
-	if (!GetIsAlive()) return;
+	if (!GetIsAlive() || !Target->GetIsAlive()) return;
 	LastWorldPosition = WorldPosition;
 	MoveDirection = Vector2Zero();
 	if (Vector2Distance(GetScreenPosition(), Target->GetScreenPosition()) > TargetMinDistance)
 	{
 		FollowPlayer();
+	}
+	else {
+		bRandomOffsetCalculated = false;
 	}
 	BaseCharacter::Tick(dt);
 	if (CheckCollisionRecs(GetCollisionRectangle(), Target->GetCollisionRectangle()) && Target->GetIsAlive())
@@ -30,8 +33,15 @@ void Enemy::Tick(float dt) {
 }
 
 void Enemy::FollowPlayer() {
+	if (!bRandomOffsetCalculated) {
+		bRandomOffsetCalculated = true;
+		RandomOffset = { 
+			static_cast<float>(GetRandomValue(-TargetMinDistance, TargetMinDistance)), 
+			static_cast<float>(GetRandomValue(-TargetMinDistance, TargetMinDistance)),
+		};
+	}
 	MoveDirection =
-		Vector2Subtract(Target->GetScreenPosition(), GetScreenPosition());
+		Vector2Subtract(Target->GetScreenPosition() + RandomOffset, GetScreenPosition());
 	const Vector2 directionNormalized = Vector2Normalize(MoveDirection);
 	const Vector2 deltaThisFrame =
 		Vector2Scale(directionNormalized, Speed * GetFrameTime());

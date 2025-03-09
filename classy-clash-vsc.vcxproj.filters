@@ -53,6 +53,9 @@
     <ClInclude Include="HealthBar\HealthBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="nature_tileset\Bush.png">

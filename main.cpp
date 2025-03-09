@@ -7,6 +7,24 @@
 #include "HealthBar/HealthBar.h"
 #include "raylib.h"
 #include "raymath.h"
+#include "main.h"
+
+
+void CreateEnemyArray(Enemy* enemyArray[10], const Texture2D& tGoblinIdle, const Texture2D& tGoblinRun, const Texture2D& tSlimeIdle, const Texture2D& tSlimeRun, Character& knight)
+{
+	for (size_t i = 0; i < 10; i++)
+	{
+		Vector2 position = { GetRandomValue(0,2600), GetRandomValue(0,2600) };
+		if (i % 2 == 0) {
+			enemyArray[i] = new Enemy(tGoblinIdle, tGoblinRun, position);
+		}
+		else {
+			enemyArray[i] = new Enemy(tSlimeIdle, tSlimeRun, position);
+		}
+		enemyArray[i]->SetTarget(&knight);
+		enemyArray[i]->SetSpeed(150.0f);
+	}
+}
 
 int main() {
 	InitWindow(Config::kScreenWidth, Config::kScreenHeight, "Classy Clash");
@@ -37,13 +55,8 @@ int main() {
 	Prop props[2] = { Prop(Vector2{400.0f, 600.0f}, tRock),
 					 Prop(Vector2{600.0f, 400.0f}, tLog) };
 
-	Enemy goblin(tGoblinIdle, tGoblinRun, Vector2{ 400.0f, 400.0f });
-	Enemy slime(tSlimeIdle, tSlimeRun, Vector2{ 600.0f, 600.0f });
-	Enemy* enemies[2] = { &goblin, &slime };
-	for (Enemy* enemy : enemies) {
-		enemy->SetTarget(&knight);
-		enemy->SetSpeed(150.0f);
-	}
+	Enemy* enemyArray[10];
+	CreateEnemyArray(enemyArray, tGoblinIdle, tGoblinRun, tSlimeIdle, tSlimeRun, knight);
 
 	while (!WindowShouldClose()) {
 		const float dt = GetFrameTime();
@@ -51,6 +64,7 @@ int main() {
 
 #pragma region Map Boundary Check
 		Vector2 currentWorldPosition = knight.GetWorldPosition();
+		std::cout << currentWorldPosition.x << " " << currentWorldPosition.y << "\n";
 		if (currentWorldPosition.x < 0 || currentWorldPosition.y < 0 ||
 			currentWorldPosition.x >
 			tGameMap.width * Config::kMapScale - Config::kScreenWidth ||
@@ -69,15 +83,30 @@ int main() {
 		}
 
 		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-			for (Enemy* enemy : enemies) {
+			for (Enemy* enemy : enemyArray) {
 				if (CheckCollisionRecs(*knight.GetSwordCollisionRectangle(), enemy->GetCollisionRectangle())) {
 					enemy->SetIsAlive(false);
 				}
 			}
 		}
 
-		for (Enemy* enemy : enemies) {
+		for (Enemy* enemy : enemyArray) {
 			enemy->Tick(dt);
+		}
+
+		bool allDead = true;
+		for (Enemy* enemy : enemyArray) {
+			if (enemy->GetIsAlive()) {
+				allDead = false;
+				break;
+			}
+		}
+		if (allDead) {
+			for (size_t i = 0; i < 10; i++)
+			{
+				enemyArray[i] = nullptr;
+			}
+			CreateEnemyArray(enemyArray, tGoblinIdle, tGoblinRun, tSlimeIdle, tSlimeRun, knight);
 		}
 		
 
@@ -88,7 +117,7 @@ int main() {
 		for (const Prop& p : props) {
 			p.Draw(mapPosition);
 		}
-		for (Enemy* enemy : enemies) {
+		for (Enemy* enemy : enemyArray) {
 			enemy->Draw();
 		}
 		if (knight.GetIsAlive()) {

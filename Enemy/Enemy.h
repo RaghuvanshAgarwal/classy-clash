@@ -16,4 +16,6 @@ private:
 	Character* Target;
 	float DamagePerSecond{ 10.0f };
 	float TargetMinDistance{ 25.0f };
+	bool bRandomOffsetCalculated{ false };
+	Vector2 RandomOffset{};
 };

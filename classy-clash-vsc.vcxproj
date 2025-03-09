@@ -140,6 +140,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="Enemy\Enemy.h" />
     <ClInclude Include="HealthBar\HealthBar.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Prop\Prop.h" />
   </ItemGroup>
   <ItemGroup>
