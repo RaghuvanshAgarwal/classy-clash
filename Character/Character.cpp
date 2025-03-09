@@ -90,3 +90,11 @@ void Character::DrawSword() const {
 		static_cast<int>(SwordCollisionRectangle.width), static_cast<int>(SwordCollisionRectangle.height),
 		RED);*/
 }
+
+void Character::TakeDamage(float damage) {
+	if (!GetIsAlive()) return;
+	Health -= damage;
+	if (Health <= 0.0f) {
+		SetIsAlive(false);
+	}
+}

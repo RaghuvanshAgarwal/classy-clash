@@ -23,6 +23,10 @@ void Enemy::Tick(float dt) {
 		FollowPlayer();
 	}
 	BaseCharacter::Tick(dt);
+	if (CheckCollisionRecs(GetCollisionRectangle(), Target->GetCollisionRectangle()) && Target->GetIsAlive())
+	{
+		Target->TakeDamage(DamagePerSecond * dt);
+	}
 }
 
 void Enemy::FollowPlayer() {

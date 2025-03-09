@@ -11,6 +11,8 @@ public:
 	virtual Vector2 GetScreenPosition() const override;
 	void SetSwordTexture(Texture* texture) { tSwordTexture = texture; }
 	const Rectangle* GetSwordCollisionRectangle() const { return &SwordCollisionRectangle; }
+	float GetHealth() const { return Health; }
+	void TakeDamage(float damage);
 
 private:
 	void DrawSword() const;
@@ -22,5 +24,6 @@ private:
 	Vector2 SwordOrigin{};
 	float SwordRotation{};
 	Rectangle SwordCollisionRectangle{};
+	float Health{ 100.0f };
 
 };

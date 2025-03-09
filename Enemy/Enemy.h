@@ -14,4 +14,5 @@ public:
 private:
 	void FollowPlayer();
 	Character* Target;
+	float DamagePerSecond{ 10.0f };
 };
